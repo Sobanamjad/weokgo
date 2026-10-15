@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 43 37% 96%;
+    --foreground: 0 0% 18%;
+    --primary: 140 28% 15%;
+    --primary-foreground: 43 37% 96%;
+    --secondary: 209 34% 17%;
+    --secondary-foreground: 43 37% 96%;
+    --accent: 33 48% 26%;
+    --accent-foreground: 43 37% 96%;
+    --accent-light: 42 45% 72%;
+    --muted: 40 23% 92%;
+    --muted-foreground: 140 10% 35%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 18%;
+    --border: 40 20% 85%;
+  }
+
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+}
+
+@layer components {
+  .container-academic {
+    @apply container mx-auto px-4 md:px-6 max-w-7xl;
+  }
+
+  .bg-background {
+    background-color: hsl(var(--background));
+  }
+  .text-foreground {
+    color: hsl(var(--foreground));
+  }
+  .bg-primary {
+    background-color: hsl(var(--primary));
+  }
+  .text-primary-foreground {
+    color: hsl(var(--primary-foreground));
+  }
+  .bg-secondary {
+    background-color: hsl(var(--secondary));
+  }
+  .text-secondary-foreground {
+    color: hsl(var(--secondary-foreground));
+  }
+  .bg-accent {
+    background-color: hsl(var(--accent));
+  }
+  .text-accent {
+    color: hsl(var(--accent));
+  }
+  .text-accent-foreground {
+    color: hsl(var(--accent-foreground));
+  }
+  .text-accent-light {
+    color: hsl(var(--accent-light));
+  }
+  .bg-muted {
+    background-color: hsl(var(--muted));
+  }
+  .text-muted-foreground {
+    color: hsl(var(--muted-foreground));
+  }
+  .bg-card {
+    background-color: hsl(var(--card));
+  }
+  .border-border {
+    border-color: hsl(var(--border));
+  }
+}
