@@ -5,12 +5,15 @@ import { Save, RotateCcw, Lock, Menu, X, Download } from 'lucide-react';
 // Simple password (aap ye change kar sakte ho)
 const ADMIN_PASSWORD = 'admin123';
 
+const API_BASE_URL = 'http://localhost:5000/api';
+
 function Admin() {
   const { siteData, updateSection, resetToDefaults } = useSite();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState('header');
   const [showSuccess, setShowSuccess] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Login handler
   const handleLogin = (e) => {
@@ -69,10 +72,46 @@ function Admin() {
     { id: 'rss', label: 'RSS Feeds' },
   ];
 
-  const handleSave = (section, data) => {
-    updateSection(section, data);
-    setShowSuccess(true);
-    setTimeout(() => setShowSuccess(false), 2000);
+  const handleSave = async (section, data) => {
+    setSaving(true);
+    try {
+      // Map section names to database keys
+      const sectionMap = {
+        'header': 'header',
+        'hero': 'hero',
+        'servicesSection': 'servicesSection',
+        'ctaBanner': 'ctaBanner',
+        'footer': 'footer',
+        'contact': 'contact',
+        'dynamicPages': 'dynamicPages',
+        'rssFeeds': 'rssFeeds',
+      };
+
+      const dbSection = sectionMap[section] || section;
+
+      // Save to backend API
+      const response = await fetch(`${API_BASE_URL}/site-data/${dbSection}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ data }),
+      });
+
+      if (response.ok) {
+        // Update local state
+        updateSection(section, data);
+        setShowSuccess(true);
+        setTimeout(() => setShowSuccess(false), 2000);
+      } else {
+        alert('Error saving to database');
+      }
+    } catch (error) {
+      console.error('Error saving:', error);
+      alert('Error saving to database');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleReset = () => {
@@ -120,8 +159,13 @@ function Admin() {
         </div>
       </header>
 
-      {/* Success message */}
-      {showSuccess && (
+      {/* Success/Saving message */}
+      {saving && (
+        <div className="fixed right-4 top-20 z-50 rounded-md bg-blue-500 px-6 py-3 text-white shadow-lg">
+          Saving to database...
+        </div>
+      )}
+      {showSuccess && !saving && (
         <div className="fixed right-4 top-20 z-50 rounded-md bg-green-500 px-6 py-3 text-white shadow-lg">
           ✓ Saved successfully!
         </div>

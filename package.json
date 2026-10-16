@@ -1,0 +1,14 @@
+{
+  "name": "weokgo",
+  "version": "1.0.0",
+  "description": "Weokgo - Dynamic website with admin panel",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

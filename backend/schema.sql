@@ -64,5 +64,14 @@ INSERT INTO site_data (section, data) VALUES
       "臺南市永華路二段684號3樓"
     ],
     "lineQrNote": "歡迎掃描 LINE QR Code 加入好友，洽詢海外企業參訪、EMBA／MBA參訪與國際交流規劃。"
-  }'::jsonb)
+  }'::jsonb),
+  ('dynamicPages', '[]'::jsonb),
+  ('rssFeeds', '[
+    {
+      "id": "news",
+      "name": "News Feed",
+      "url": "https://chinanewscloud.com/api/v1/rss-news",
+      "enabled": true
+    }
+  ]'::jsonb)
 ON CONFLICT (section) DO NOTHING;
