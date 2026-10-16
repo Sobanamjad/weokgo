@@ -15,8 +15,19 @@ import SharedHeader from './components/layout/SharedHeader';
 import SharedFooter from './components/layout/SharedFooter';
 
 function App() {
-  const { siteData } = useSite();
+  const { siteData, loading } = useSite();
   const { hero, servicesSection, ctaBanner, header } = siteData;
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-background">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-accent border-t-transparent mx-auto"></div>
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-background">

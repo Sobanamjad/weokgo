@@ -85,29 +85,33 @@ export const defaultSiteData = {
   ],
 };
 
+const API_BASE_URL = 'http://localhost:5000/api';
+
 // ─── Context ──────────────────────────────────────────────────────────────────
 const SiteContext = createContext(null);
 
-const STORAGE_KEY = 'weokgo_site_data';
-
 export function SiteProvider({ children }) {
-  const [siteData, setSiteData] = useState(() => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        // Deep merge stored over defaults so new keys still appear
-        return deepMerge(defaultSiteData, JSON.parse(stored));
-      }
-    } catch {
-      // corrupted storage — fall back to defaults
-    }
-    return defaultSiteData;
-  });
+  const [siteData, setSiteData] = useState(defaultSiteData);
+  const [loading, setLoading] = useState(true);
 
-  // Persist every change
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(siteData));
-  }, [siteData]);
+    fetchSiteData();
+  }, []);
+
+  const fetchSiteData = async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/site-data`);
+      if (response.ok) {
+        const data = await response.json();
+        setSiteData(prev => deepMerge(prev, data));
+      }
+    } catch (error) {
+      console.error('Error fetching site data:', error);
+      // Fall back to defaults if API fails
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Patch helper — merges partial update into siteData
   const updateSection = (section, partial) => {
@@ -120,11 +124,10 @@ export function SiteProvider({ children }) {
   // Full reset to defaults
   const resetToDefaults = () => {
     setSiteData(defaultSiteData);
-    localStorage.removeItem(STORAGE_KEY);
   };
 
   return (
-    <SiteContext.Provider value={{ siteData, updateSection, resetToDefaults }}>
+    <SiteContext.Provider value={{ siteData, updateSection, resetToDefaults, loading }}>
       {children}
     </SiteContext.Provider>
   );
